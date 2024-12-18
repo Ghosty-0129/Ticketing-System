@@ -1,0 +1,68 @@
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const router = express.Router();
+
+const configFilePath = './config.json';
+
+
+// Helper function to read the config file
+function readConfig() {
+    try {
+        const rawData = fs.readFileSync(configFilePath, 'utf8');
+        return JSON.parse(rawData);
+    } catch (error) {
+        console.error("Error reading config file:", error);
+        return null;
+    }
+}
+
+// Helper function to save the config to a file
+function saveConfig(config) {
+    try {
+        fs.writeFileSync(configFilePath, JSON.stringify(config, null, 2), 'utf8');
+    } catch (error) {
+        console.error("Error saving config file:", error);
+        throw new Error('Error saving configuration.');
+    }
+}
+
+// GET route to retrieve the current config
+router.get('/config', (req, res) => {
+    const config = readConfig();
+    if (!config) {
+        return res.status(500).json({ error: 'Unable to read configuration.' });
+    }
+    res.json(config);
+});
+
+// POST route to update the config
+router.post('/config', express.json(), (req, res) => {
+    const { totalTickets, ticketReleaseRate, customerRetrievalRate, maxTicketCapacity } = req.body;
+
+    // Validate input
+    if (
+        !Number.isInteger(totalTickets) || totalTickets <= 0 ||
+        !Number.isInteger(ticketReleaseRate) || ticketReleaseRate <= 0 ||
+        !Number.isInteger(customerRetrievalRate) || customerRetrievalRate <= 0 ||
+        !Number.isInteger(maxTicketCapacity) || maxTicketCapacity <= 0
+    ) {
+        return res.status(400).json({ error: 'All fields must be positive integers.' });
+    }
+
+    const newConfig = {
+        totalTickets,
+        ticketReleaseRate,
+        customerRetrievalRate,
+        maxTicketCapacity,
+    };
+
+    try {
+        saveConfig(newConfig);
+        res.status(200).json({ message: 'Configuration saved successfully', config: newConfig });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+module.exports = router;

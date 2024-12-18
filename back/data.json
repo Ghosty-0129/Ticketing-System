@@ -1,0 +1,41 @@
+{
+  "customers": [
+    {
+      "username": "MANUJA",
+      "password": "123",
+      "customerId": "123",
+      "tickets": [],
+      "lastRetrievalTime": 0
+    }
+  ],
+  "vendors": [
+    {
+      "username": "admin",
+      "password": "123",
+      "vendorId": "v001"
+    },
+    {
+      "username": "admin1",
+      "password": "123",
+      "vendorId": "123"
+    },
+    {
+      "username": "admin",
+      "password": "123",
+      "vendorId": "123"
+    },
+    {
+      "username": "MANUJA",
+      "password": "123",
+      "vendorId": "123"
+    },
+    {
+      "username": "MANUJA",
+      "password": "123",
+      "vendorId": "123"
+    }
+  ],
+  "ticketPool": {
+    "tickets": []
+  }
+}
